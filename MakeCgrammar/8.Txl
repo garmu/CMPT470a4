@@ -34,22 +34,22 @@ define variable_declaration_hasConst
 end define
 
 define variable_declaration
-	[var_type] [repeat start_variable_declaration] [variable_declared]
-	|[var_type] [repeat start_variable_declaration] [end_variable_declaration]
-	|[var_type] [id] [variable_declared]
-	|[id] [variable_declared]
-	|[var_type] [end_variable_declaration]
+	[var_type] [repeat start_variable_name] [variable_assigned]
+	|[var_type] [repeat start_variable_name] [end_variable_name]
+	|[var_type] [id] [variable_assigned]
+	|[id] [variable_assigned]
+	|[var_type] [end_variable_name]
 end define
 
-define start_variable_declaration
+define start_variable_name
 	[id],
 end define
 
-define end_variable_declaration
+define end_variable_name
 	[id]; [NL]
 end define
 
-define variable_declared
+define variable_assigned
 	= [variable]; [NL]
 	|= [variable] [op] [id]; [NL]
 	|= [id] [op] [variable]; [NL]
@@ -85,6 +85,14 @@ define print_statement
 	printf([stringlit]); [NL]
 end define
 
+define scan_statement
+	scanf ([stringlit],[scan_mod]); [NL]
+end define
+
+define scan_mod
+	&[charlit]
+end define
+	
 define return_statement
 	return [return_value]; [NL][EX]
 end define
