@@ -20,6 +20,7 @@ end define
 
 define function_body
 	[repeat variable_declaration_hasConst] [return_statement]
+	| [repeat scan_statement] [return_statement];
 	| [print_statement] [return_statement]
 end define
 
