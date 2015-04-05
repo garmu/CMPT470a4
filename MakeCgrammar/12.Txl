@@ -1,5 +1,12 @@
-
 % Grammar:
+tokens
+	id	| "[&]\i*"
+end tokens
+
+compounds
+    '!= '>= '<= '== '|| '&& '!(
+end compounds  
+
 define program
 	[c_function]
 end define
@@ -10,11 +17,6 @@ define c_function
 	  [function_body]
 	}
 end define
-
-tokens
-	id	| "[&]\i*"
-end tokens
-
 
 define function_head
 	[return_type] [function_name]()
@@ -28,13 +30,13 @@ define function_body
 	[repeat statement] [return_statement]
 end define
 
-
 define statement
 	[variable_declaration]
 	|[scan_statement]
 	|[print_statement]
+	|[if_statement]
+	|[else_statement]
 end define
-
 
 
 
@@ -52,37 +54,65 @@ define start_variable_name
 end define
 
 define end_variable_name
-	[id]; [NL]
+	[id]; 								[NL]
 end define
 
 define variable_assigned
-	= [variable]; [NL]
-	|= [variable] [op] [id]; [NL]
-	|= [id] [op] [variable]; [NL]
+	= [variable]; 						[NL]
+	|= [variable] [op] [id]; 			[NL]
+	|= [id] [op] [variable]; 			[NL]
 end define
+
 
 
 define print_statement
-	'printf [open_bracket][stringlit][close_bracket]; [NL]
-	| 'printf [open_bracket][stringlit]',[id][close_bracket]; [NL]
+	'printf ([stringlit]); 				[NL]
+	| 'printf ([stringlit],[id]); 		[NL]
 end define
+
+
 
 define scan_statement
-	'scanf [open_bracket][stringlit]',[id][close_bracket]; [NL]
-end define
-
-define open_bracket
-	'(
-end define
-
-define close_bracket
-	')
+	'scanf ([stringlit],[id]); 			[NL]
 end define
 
 
-	
+
+define if_statement
+	if([if_conditional][extra_if]){ 	[NL][IN]
+		[repeat statement]				[EX]
+	}									[NL]
+	|if([if_conditional][extra_if])	[NL][IN]
+		[statement]						[EX]
+end define
+
+define if_conditional
+	([id][conditionOp][variable])
+	|[id][conditionOp][variable]
+	|!([id][conditionOp][variable])
+end define
+
+define extra_if
+	[and_or][if_conditional]
+end define
+
+
+
+
+
+define else_statement
+	else { 								[NL][IN]
+		[repeat statement]				[EX]
+	}									[NL]
+	| else								[NL][IN]
+		[statement]						[EX]
+end define
+
+
+
+
 define return_statement
-	return [return_value]; [NL][EX]
+	return [return_value]; 				[NL][EX]
 end define
 
 define return_value
@@ -92,6 +122,8 @@ end define
 define return_type
 	int
 end define
+
+
 
 
 define variable
@@ -120,6 +152,13 @@ define op
     '+ | '- | '/ | '* | '%
 end define
 
+define conditionOp
+    '> | '< | '>= | '<= | '== | '!=
+end define 
+
+define and_or
+	'&&	| '||
+end define
 
 
 % Rules:

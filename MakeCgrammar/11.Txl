@@ -1,5 +1,12 @@
-
 % Grammar:
+tokens
+	id	| "[&]\i*"
+end tokens
+
+compounds
+    '!= '>= '<= '==
+end compounds  
+
 define program
 	[c_function]
 end define
@@ -10,11 +17,6 @@ define c_function
 	  [function_body]
 	}
 end define
-
-tokens
-	id	| "[&]\i*"
-end tokens
-
 
 define function_head
 	[return_type] [function_name]()
@@ -28,16 +30,13 @@ define function_body
 	[repeat statement] [return_statement]
 end define
 
-
 define statement
 	[variable_declaration]
 	|[scan_statement]
 	|[print_statement]
+	|[if_statement]
+	|[else_statement]
 end define
-
-
-
-
 
 define variable_declaration
 	[opt 'const] [var_type] [repeat start_variable_name] [variable_assigned]
@@ -52,37 +51,42 @@ define start_variable_name
 end define
 
 define end_variable_name
-	[id]; [NL]
+	[id]; 								[NL]
 end define
 
 define variable_assigned
-	= [variable]; [NL]
-	|= [variable] [op] [id]; [NL]
-	|= [id] [op] [variable]; [NL]
+	= [variable]; 						[NL]
+	|= [variable] [op] [id]; 			[NL]
+	|= [id] [op] [variable]; 			[NL]
 end define
 
-
 define print_statement
-	'printf [open_bracket][stringlit][close_bracket]; [NL]
-	| 'printf [open_bracket][stringlit]',[id][close_bracket]; [NL]
+	'printf ([stringlit]); 				[NL]
+	| 'printf ([stringlit],[id]); 		[NL]
 end define
 
 define scan_statement
-	'scanf [open_bracket][stringlit]',[id][close_bracket]; [NL]
+	'scanf ([stringlit],[id]); 			[NL]
 end define
 
-define open_bracket
-	'(
+define if_statement
+	if([id][conditionOp][variable]){ 	[NL][IN]
+		[repeat statement]				[EX]
+	}									[NL]
+	|if([id][conditionOp][variable])	[NL][IN]
+		[statement]						[EX]
 end define
 
-define close_bracket
-	')
+define else_statement
+	else { 								[NL][IN]
+		[repeat statement]				[EX]
+	}									[NL]
+	| else								[NL][IN]
+		[statement]						[EX]
 end define
 
-
-	
 define return_statement
-	return [return_value]; [NL][EX]
+	return [return_value]; 				[NL][EX]
 end define
 
 define return_value
@@ -92,7 +96,6 @@ end define
 define return_type
 	int
 end define
-
 
 define variable
 	[number]
@@ -120,7 +123,9 @@ define op
     '+ | '- | '/ | '* | '%
 end define
 
-
+define conditionOp
+    '> | '< | '>= | '<= | '== | '!=
+end define    
 
 % Rules:
 function main

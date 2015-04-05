@@ -3,34 +3,23 @@ tokens
 	id				| "[&]\i*" 
 	casechar 		"'\a*'[:]"
 	defaultchar		"\a*[:]"
-	incr 			"\u\i*[ ]*[+][+]"
-	decr			"\u\i*[ ]*[-][-]"
-	incl			"\#include\<\u+\.\u+\>"
+	incr 			"\u\i*[+][+]"
+	decr			"\u\i*[-][-]"
 end tokens
 
 compounds
     '!= '>= '<= '== '|| '&& '!( '++
 end compounds  
 
-comments
-	//
-	/* */
-end comments
-
 define program
 	[c_function]
 end define
 
 define c_function
-	[repeat include_statement]
 	[function_head] [NL]
 	{ [NL][IN]
 	  [function_body]
 	}
-end define
-
-define include_statement
-	[incl]					[NL][NL]
 end define
 
 define function_head
@@ -56,8 +45,6 @@ define statement
 	|[while_statement]
 	|[incrOrDecr_statement]
 	|[doWhile_statement]
-	| break; [NL]
-	| continue; [NL]
 end define
 
 
@@ -101,10 +88,10 @@ end define
 
 
 define if_statement
-	if([conditional][opt extra_cond]){ 	[NL][IN]
+	if([conditional][extra_cond]){ 	[NL][IN]
 		[repeat statement]				[EX]
 	}									[NL]
-	|if([conditional][opt extra_cond])	[NL][IN]
+	|if([conditional][extra_cond])	[NL][IN]
 		[statement]						[EX]
 end define
 
@@ -150,10 +137,10 @@ define default
 end define
 
 define for_statement
-	for([id]=[idOrValue];[conditional];[incrOrDecr]){ 			[NL][IN]
+	for([id]=[value];[conditional];[incrOrDecr]){ 				[NL][IN]
 		[repeat statement]										[EX]
 	}															[NL]
-	|for([id]=[idOrValue];[conditional];[incrOrDecr])			[NL][IN]
+	|for([id]=[value];[conditional];[incrOrDecr])				[NL][IN]
 		[statement]												[EX]
 end define
 
@@ -161,7 +148,7 @@ define while_statement
 	while([conditional][opt extra_cond]){ 	[NL][IN]
 		[repeat statement]					[EX]
 	}										[NL]
-	| while([conditional][opt extra_cond])	[NL][IN]
+	|while([conditional][opt extra_cond])	[NL][IN]
 		[statement]							[EX]
 end define
 

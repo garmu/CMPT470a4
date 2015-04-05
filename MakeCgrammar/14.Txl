@@ -1,36 +1,23 @@
 % Grammar:
 tokens
-	id				| "[&]\i*" 
+	id				| "[&]\i*" | "\u\i*[+][+]"
 	casechar 		"'\a*'[:]"
 	defaultchar		"\a*[:]"
-	incr 			"\u\i*[ ]*[+][+]"
-	decr			"\u\i*[ ]*[-][-]"
-	incl			"\#include\<\u+\.\u+\>"
 end tokens
 
 compounds
     '!= '>= '<= '== '|| '&& '!( '++
 end compounds  
 
-comments
-	//
-	/* */
-end comments
-
 define program
 	[c_function]
 end define
 
 define c_function
-	[repeat include_statement]
 	[function_head] [NL]
 	{ [NL][IN]
 	  [function_body]
 	}
-end define
-
-define include_statement
-	[incl]					[NL][NL]
 end define
 
 define function_head
@@ -53,11 +40,6 @@ define statement
 	|[else_statement]
 	|[switch_statement]
 	|[for_statement]
-	|[while_statement]
-	|[incrOrDecr_statement]
-	|[doWhile_statement]
-	| break; [NL]
-	| continue; [NL]
 end define
 
 
@@ -101,21 +83,21 @@ end define
 
 
 define if_statement
-	if([conditional][opt extra_cond]){ 	[NL][IN]
+	if([if_conditional][extra_if]){ 	[NL][IN]
 		[repeat statement]				[EX]
 	}									[NL]
-	|if([conditional][opt extra_cond])	[NL][IN]
+	|if([if_conditional][extra_if])	[NL][IN]
 		[statement]						[EX]
 end define
 
-define conditional
-	([idOrValue][conditionOp][idOrValue])
-	|[idOrValue][conditionOp][idOrValue]
-	|!([idOrValue][conditionOp][idOrValue])
+define if_conditional
+	([id][conditionOp][value])
+	|[id][conditionOp][value]
+	|!([id][conditionOp][value])
 end define
 
-define extra_cond
-	[and_or][conditional]
+define extra_if
+	[and_or][if_conditional]
 end define
 
 
@@ -150,30 +132,13 @@ define default
 end define
 
 define for_statement
-	for([id]=[idOrValue];[conditional];[incrOrDecr]){ 			[NL][IN]
+	for([id]=[value];[if_conditional];[id]){ 				[NL][IN]
 		[repeat statement]										[EX]
 	}															[NL]
-	|for([id]=[idOrValue];[conditional];[incrOrDecr])			[NL][IN]
+	|for([id]=[value];[if_conditional];[id])				[NL][IN]
 		[statement]												[EX]
 end define
 
-define while_statement
-	while([conditional][opt extra_cond]){ 	[NL][IN]
-		[repeat statement]					[EX]
-	}										[NL]
-	| while([conditional][opt extra_cond])	[NL][IN]
-		[statement]							[EX]
-end define
-
-define incrOrDecr_statement
-	[incrOrDecr];							[NL]
-end define
-
-define doWhile_statement
-	do { 									[NL][IN]
-		[repeat statement]					[EX]
-	} while([conditional][opt extra_cond]);	[NL]
-end define
 
 
 define return_statement
@@ -195,16 +160,6 @@ define value
 	[number]
 	|[stringlit]
 	|[charlit] 
-end define
-
-define idOrValue
-	[value]
-	|[id]
-end define
-
-define incrOrDecr
-	[incr]
-	|[decr]
 end define
 	
 define var_type

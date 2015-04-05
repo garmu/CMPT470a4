@@ -3,19 +3,14 @@ tokens
 	id				| "[&]\i*" 
 	casechar 		"'\a*'[:]"
 	defaultchar		"\a*[:]"
-	incr 			"\u\i*[ ]*[+][+]"
-	decr			"\u\i*[ ]*[-][-]"
+	incr 			"\u\i*[+][+]"
+	decr			"\u\i*[-][-]"
 	incl			"\#include\<\u+\.\u+\>"
 end tokens
 
 compounds
     '!= '>= '<= '== '|| '&& '!( '++
 end compounds  
-
-comments
-	//
-	/* */
-end comments
 
 define program
 	[c_function]
@@ -150,10 +145,10 @@ define default
 end define
 
 define for_statement
-	for([id]=[idOrValue];[conditional];[incrOrDecr]){ 			[NL][IN]
+	for([id]=[value];[conditional];[incrOrDecr]){ 				[NL][IN]
 		[repeat statement]										[EX]
 	}															[NL]
-	|for([id]=[idOrValue];[conditional];[incrOrDecr])			[NL][IN]
+	|for([id]=[value];[conditional];[incrOrDecr])				[NL][IN]
 		[statement]												[EX]
 end define
 
