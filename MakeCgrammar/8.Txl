@@ -1,3 +1,4 @@
+
 % Grammar:
 define program
 	[c_function]
@@ -10,6 +11,10 @@ define c_function
 	}
 end define
 
+compounds
+	
+end compounds
+
 define function_head
 	[return_type] [function_name]()
 end define
@@ -19,26 +24,26 @@ define function_name
 end define
 
 define function_body
-	[repeat variable_declaration_hasConst] [return_statement]
-	| [repeat scan_statement] [return_statement];
-	| [print_statement] [return_statement]
+	[repeat statement] [return_statement]
 end define
 
-define return_type
-	int
+
+define statement
+	[variable_declaration]
+	|[scan_statement]
+	|[print_statement]
 end define
 
-define variable_declaration_hasConst
-	'const [variable_declaration]
-	|[variable_declaration]
-end define
+
+
+
 
 define variable_declaration
-	[var_type] [repeat start_variable_name] [variable_assigned]
-	|[var_type] [repeat start_variable_name] [end_variable_name]
-	|[var_type] [id] [variable_assigned]
-	|[id] [variable_assigned]
-	|[var_type] [end_variable_name]
+	[opt 'const] [var_type] [repeat start_variable_name] [variable_assigned]
+	|[opt 'const] [var_type] [repeat start_variable_name] [end_variable_name]
+	|[opt 'const] [var_type] [id] [variable_assigned]
+	|[opt 'const] [id] [variable_assigned]
+	|[opt 'const] [var_type] [end_variable_name]
 end define
 
 define start_variable_name
@@ -54,6 +59,42 @@ define variable_assigned
 	|= [variable] [op] [id]; [NL]
 	|= [id] [op] [variable]; [NL]
 end define
+
+
+define print_statement
+	'printf [open_bracket][stringlit][close_bracket]; [NL]
+	| 'printf [open_bracket][stringlit]',[id][close_bracket]; [NL]
+end define
+
+define scan_statement
+	'scanf [open_bracket][stringlit]',[scan_mod][close_bracket]; [NL]
+end define
+
+define open_bracket
+	'(
+end define
+
+define close_bracket
+	')
+end define
+
+define scan_mod
+	'&[id]
+end define
+	
+define return_statement
+	return [return_value]; [NL][EX]
+end define
+
+define return_value
+	[number]
+end define
+
+define return_type
+	int
+end define
+
+
 
 define variable
 	[number]
@@ -81,25 +122,9 @@ define op
     '+ | '- | '/ | '* | '%
 end define
 
-define print_statement
-	printf([stringlit]); [NL]
-end define
 
-define scan_statement
-	scanf ([stringlit],[scan_mod]); [NL]
-end define
 
-define scan_mod
-	&[charlit]
-end define
-	
-define return_statement
-	return [return_value]; [NL][EX]
-end define
 
-define return_value
-	[number]
-end define
 
 % Rules:
 function main
