@@ -12,7 +12,8 @@ define c_function
 end define
 
 compounds
-	
+	'&i '&d '&u '&o '&x '&f '&e '&g '&a
+	'&c '&s '&p '&n
 end compounds
 
 define function_head
@@ -67,7 +68,7 @@ define print_statement
 end define
 
 define scan_statement
-	'scanf [open_bracket][stringlit]',[scan_mod][close_bracket]; [NL]
+	'scanf [open_bracket][stringlit]',[specifier][close_bracket]; [NL]
 end define
 
 define open_bracket
@@ -78,9 +79,7 @@ define close_bracket
 	')
 end define
 
-define scan_mod
-	'&[id]
-end define
+
 	
 define return_statement
 	return [return_value]; [NL][EX]
@@ -122,7 +121,10 @@ define op
     '+ | '- | '/ | '* | '%
 end define
 
-
+define specifier
+	'&i |'&d |'&u |'&o |'&x |'&f |'&e |'&g |'&a
+	|'&c |'&s |'&p |'&n
+end define	
 
 
 
