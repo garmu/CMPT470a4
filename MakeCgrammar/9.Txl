@@ -71,9 +71,9 @@ end define
 define if_statement
 	if([id][conditionOp][variable]){ [NL][IN]
 		[repeat statement]
-	}[NL]
+	}[NL][EX]
 	|if([id][conditionOp][variable])	[NL][IN]
-		[statement]
+		[statement][EX]
 end define
 
 define return_statement

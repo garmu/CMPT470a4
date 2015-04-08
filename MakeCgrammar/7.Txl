@@ -54,6 +54,9 @@ define variable_declared
 	= [variable]; [NL]
 	|= [variable] [op] [id]; [NL]
 	|= [id] [op] [variable]; [NL]
+	|= [id] [op] [id]; [NL]
+	|= [variable_declared]
+
 end define
 
 define variable
