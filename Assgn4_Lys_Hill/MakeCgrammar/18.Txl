@@ -3,19 +3,14 @@ tokens
 	id				| "[&]\i*" 
 	casechar 		"'\a*'[:]"
 	defaultchar		"\a*[:]"
-	incr 			"\u\i*[ ]*[+][+]"
-	decr			"\u\i*[ ]*[-][-]"
-	incl			"\#include<\u+.\u+>"
+	incr 			"\u\i*[+][+]"
+	decr			"\u\i*[-][-]"
+	incl			"\#include\<\u+\.\u+\>"
 end tokens
 
 compounds
     '!= '>= '<= '== '|| '&& '!( '++
 end compounds  
-
-comments
-	//
-	/* */
-end comments
 
 define program
 	[c_function]
@@ -60,9 +55,7 @@ define statement
 	| continue; [NL]
 end define
 
-define type_cast
-	([var_type])
-end define
+
 
 
 define variable_declaration
@@ -82,10 +75,9 @@ define end_variable_name
 end define
 
 define value_assigned
-	= [opt type_cast][value];	 										[NL]
-	|= [opt type_cast][value] [op] [opt type_cast][id]; 				[NL]
-	|= [opt type_cast][id] [op] [opt type_cast][value];	 				[NL]
-	|= [opt type_cast][id] [op] [opt type_cast][id];	 			    [NL]
+	= [value];	 						[NL]
+	|= [value] [op] [id]; 				[NL]
+	|= [id] [op] [value];	 			[NL]
 end define
 
 
@@ -98,12 +90,10 @@ end define
 
 
 define scan_statement
-	'scanf ([stringlit],[id] [opt extra_scan]); [NL]
+	'scanf ([stringlit],[id]); 			[NL]
 end define
 
-define extra_scan
-	,[id]
-end define
+
 
 define if_statement
 	if([conditional][opt extra_cond]){ 	[NL][IN]
@@ -117,7 +107,6 @@ define conditional
 	([idOrValue][conditionOp][idOrValue])
 	|[idOrValue][conditionOp][idOrValue]
 	|!([idOrValue][conditionOp][idOrValue])
-
 end define
 
 define extra_cond
@@ -145,7 +134,7 @@ define switch_statement
 end define
 
 define case
-	'case [casechar]						[NL][IN]
+	case [casechar]						[NL][IN]
 	[repeat statement]
 	break;								[EX][NL]
 end define
@@ -156,10 +145,10 @@ define default
 end define
 
 define for_statement
-	for([id]=[idOrValue];[conditional];[opt incrOrDecr]){ 			[NL][IN]
+	for([id]=[value];[conditional];[incrOrDecr]){ 				[NL][IN]
 		[repeat statement]										[EX]
 	}															[NL]
-	|for([id]=[idOrValue];[conditional];[opt incrOrDecr])			[NL][IN]
+	|for([id]=[value];[conditional];[incrOrDecr])				[NL][IN]
 		[statement]												[EX]
 end define
 
@@ -206,10 +195,6 @@ end define
 define idOrValue
 	[value]
 	|[id]
-	|[value][op][value]
-	|[id][op][value]
-	|[value][op][id]
-	|[id][op][id]
 end define
 
 define incrOrDecr

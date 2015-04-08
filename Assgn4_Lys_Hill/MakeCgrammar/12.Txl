@@ -1,14 +1,10 @@
 % Grammar:
 tokens
-	id				| "[&]\i*" 
-	casechar 		"'\a*'[:]"
-	defaultchar		"\a*[:]"
-	incr 			"\u\i*[+][+]"
-	decr			"\u\i*[-][-]"
+	id	| "[&]\i*"
 end tokens
 
 compounds
-    '!= '>= '<= '== '|| '&& '!( '++
+    '!= '>= '<= '== '|| '&& '!(
 end compounds  
 
 define program
@@ -40,21 +36,16 @@ define statement
 	|[print_statement]
 	|[if_statement]
 	|[else_statement]
-	|[switch_statement]
-	|[for_statement]
-	|[while_statement]
-	|[incrOrDecr_statement]
-	|[doWhile_statement]
 end define
 
 
 
 
 define variable_declaration
-	[opt 'const] [var_type] [repeat start_variable_name] [value_assigned]
+	[opt 'const] [var_type] [repeat start_variable_name] [variable_assigned]
 	|[opt 'const] [var_type] [repeat start_variable_name] [end_variable_name]
-	|[opt 'const] [var_type] [id] [value_assigned]
-	|[opt 'const] [id] [value_assigned]
+	|[opt 'const] [var_type] [id] [variable_assigned]
+	|[opt 'const] [id] [variable_assigned]
 	|[opt 'const] [var_type] [end_variable_name]
 end define
 
@@ -66,10 +57,10 @@ define end_variable_name
 	[id]; 								[NL]
 end define
 
-define value_assigned
-	= [value];	 						[NL]
-	|= [value] [op] [id]; 				[NL]
-	|= [id] [op] [value];	 			[NL]
+define variable_assigned
+	= [variable]; 						[NL]
+	|= [variable] [op] [id]; 			[NL]
+	|= [id] [op] [variable]; 			[NL]
 end define
 
 
@@ -88,21 +79,21 @@ end define
 
 
 define if_statement
-	if([conditional][opt extra_cond]){ 	[NL][IN]
+	if([if_conditional][extra_if]){ 	[NL][IN]
 		[repeat statement]				[EX]
 	}									[NL]
-	|if([conditional][opt extra_cond])	[NL][IN]
+	|if([if_conditional][extra_if])	[NL][IN]
 		[statement]						[EX]
 end define
 
-define conditional
-	([idOrValue][conditionOp][idOrValue])
-	|[idOrValue][conditionOp][idOrValue]
-	|!([idOrValue][conditionOp][idOrValue])
+define if_conditional
+	([id][conditionOp][variable])
+	|[id][conditionOp][variable]
+	|!([id][conditionOp][variable])
 end define
 
-define extra_cond
-	[and_or][conditional]
+define extra_if
+	[and_or][if_conditional]
 end define
 
 
@@ -118,49 +109,6 @@ define else_statement
 end define
 
 
-define switch_statement
-	switch([id]){						[NL][IN]
-	[repeat case]						
-	[default]							[EX]
-	}									[NL]
-end define
-
-define case
-	case [casechar]						[NL][IN]
-	[repeat statement]
-	break;								[EX][NL]
-end define
-	
-define default
-	[defaultchar]						[IN][NL]
-	[repeat statement]					[EX]
-end define
-
-define for_statement
-	for([id]=[value];[conditional];[incrOrDecr]){ 				[NL][IN]
-		[repeat statement]										[EX]
-	}															[NL]
-	|for([id]=[value];[conditional];[incrOrDecr])				[NL][IN]
-		[statement]												[EX]
-end define
-
-define while_statement
-	while([conditional][opt extra_cond]){ 	[NL][IN]
-		[repeat statement]					[EX]
-	}										[NL]
-	|while([conditional][opt extra_cond])	[NL][IN]
-		[statement]							[EX]
-end define
-
-define incrOrDecr_statement
-	[incrOrDecr];							[NL]
-end define
-
-define doWhile_statement
-	do { 									[NL][IN]
-		[repeat statement]					[EX]
-	} while([conditional][opt extra_cond]);	[NL]
-end define
 
 
 define return_statement
@@ -178,20 +126,10 @@ end define
 
 
 
-define value
+define variable
 	[number]
 	|[stringlit]
 	|[charlit] 
-end define
-
-define idOrValue
-	[value]
-	|[id]
-end define
-
-define incrOrDecr
-	[incr]
-	|[decr]
 end define
 	
 define var_type

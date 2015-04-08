@@ -1,12 +1,10 @@
 % Grammar:
 tokens
-	id				| "[&]\i*" | "\u\i*[+][+]" | "\u\i*[-][-]"
-	casechar 		"'\a*'[:]"
-	defaultchar		"\a*[:]"
+	id	| "[&]\i*"
 end tokens
 
 compounds
-    '!= '>= '<= '== '|| '&& '!( '++
+    '!= '>= '<= '==
 end compounds  
 
 define program
@@ -38,18 +36,13 @@ define statement
 	|[print_statement]
 	|[if_statement]
 	|[else_statement]
-	|[switch_statement]
-	|[for_statement]
 end define
 
-
-
-
 define variable_declaration
-	[opt 'const] [var_type] [repeat start_variable_name] [value_assigned]
+	[opt 'const] [var_type] [repeat start_variable_name] [variable_assigned]
 	|[opt 'const] [var_type] [repeat start_variable_name] [end_variable_name]
-	|[opt 'const] [var_type] [id] [value_assigned]
-	|[opt 'const] [id] [value_assigned]
+	|[opt 'const] [var_type] [id] [variable_assigned]
+	|[opt 'const] [id] [variable_assigned]
 	|[opt 'const] [var_type] [end_variable_name]
 end define
 
@@ -61,48 +54,28 @@ define end_variable_name
 	[id]; 								[NL]
 end define
 
-define value_assigned
-	= [value];	 						[NL]
-	|= [value] [op] [id]; 				[NL]
-	|= [id] [op] [value];	 			[NL]
+define variable_assigned
+	= [variable]; 						[NL]
+	|= [variable] [op] [id]; 			[NL]
+	|= [id] [op] [variable]; 			[NL]
 end define
-
-
 
 define print_statement
 	'printf ([stringlit]); 				[NL]
 	| 'printf ([stringlit],[id]); 		[NL]
 end define
 
-
-
 define scan_statement
 	'scanf ([stringlit],[id]); 			[NL]
 end define
 
-
-
 define if_statement
-	if([if_conditional][extra_if]){ 	[NL][IN]
+	if([id][conditionOp][variable]){ 	[NL][IN]
 		[repeat statement]				[EX]
 	}									[NL]
-	|if([if_conditional][extra_if])	[NL][IN]
+	|if([id][conditionOp][variable])	[NL][IN]
 		[statement]						[EX]
 end define
-
-define if_conditional
-	([id][conditionOp][value])
-	|[id][conditionOp][value]
-	|!([id][conditionOp][value])
-end define
-
-define extra_if
-	[and_or][if_conditional]
-end define
-
-
-
-
 
 define else_statement
 	else { 								[NL][IN]
@@ -111,35 +84,6 @@ define else_statement
 	| else								[NL][IN]
 		[statement]						[EX]
 end define
-
-
-define switch_statement
-	switch([id]){						[NL][IN]
-	[repeat case]						
-	[default]							[EX]
-	}									[NL]
-end define
-
-define case
-	case [casechar]						[NL][IN]
-	[repeat statement]
-	break;								[EX][NL]
-end define
-	
-define default
-	[defaultchar]						[IN][NL]
-	[repeat statement]					[EX]
-end define
-
-define for_statement
-	for([id]=[value];[if_conditional];[id]){ 				[NL][IN]
-		[repeat statement]										[EX]
-	}															[NL]
-	|for([id]=[value];[if_conditional];[id])				[NL][IN]
-		[statement]												[EX]
-end define
-
-
 
 define return_statement
 	return [return_value]; 				[NL][EX]
@@ -153,10 +97,7 @@ define return_type
 	int
 end define
 
-
-
-
-define value
+define variable
 	[number]
 	|[stringlit]
 	|[charlit] 
@@ -184,12 +125,7 @@ end define
 
 define conditionOp
     '> | '< | '>= | '<= | '== | '!=
-end define 
-
-define and_or
-	'&&	| '||
-end define
-
+end define    
 
 % Rules:
 function main
