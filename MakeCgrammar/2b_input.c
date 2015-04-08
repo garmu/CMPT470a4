@@ -1,0 +1,1 @@
+int isTrue(){ int variable; return 0;}

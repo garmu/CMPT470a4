@@ -37,6 +37,7 @@ define variable_declaration
 	[var_type] [repeat start_variable_declaration] [variable_declared]
 	|[var_type] [repeat start_variable_declaration] [end_variable_declaration]
 	|[var_type] [id] [variable_declared]
+	|[var_type] [op] [id] [variable_declared]
 	|[id] [variable_declared]
 	|[var_type] [end_variable_declaration]
 end define
@@ -83,6 +84,10 @@ end define
 
 define print_statement
 	printf([stringlit]); [NL]
+end define
+
+define scan_statement
+	scanf([stringlit]); [NL]
 end define
 
 define return_statement

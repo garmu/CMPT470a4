@@ -20,7 +20,7 @@ end define
 
 define function_body
 	[repeat variable_declaration] [return_statement]
-	| [print_statement] [return_statement]
+	|[repeat print_statement] [return_statement]
 end define
 
 define return_type

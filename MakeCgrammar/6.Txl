@@ -50,7 +50,7 @@ define variable_declared
 end define
 
 define print_statement
-	printf([stringlit]); [NL]
+	printf ([stringlit]); [NL]
 end define
 
 define return_statement
